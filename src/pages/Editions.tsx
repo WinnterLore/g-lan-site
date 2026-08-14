@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { ArrowRight, UsersThree } from '@phosphor-icons/react'
 import { GameChip } from '@/components/GameChip'
 import { Button } from '@/components/ui/button'
+import { Magnetic } from '@/components/Magnetic'
 import { editions } from '@/data/editions'
 
 export function Editions() {
@@ -113,11 +114,13 @@ export function Editions() {
             Suis-nous sur les réseaux pour ne rater aucune annonce, ou écris-nous directement.
           </p>
           <div className="mt-8">
-            <Button asChild size="lg">
-              <NavLink to="/contact">
-                Nous contacter <ArrowRight size={18} weight="bold" />
-              </NavLink>
-            </Button>
+            <Magnetic>
+              <Button asChild size="lg">
+                <NavLink to="/contact">
+                  Nous contacter <ArrowRight size={18} weight="bold" />
+                </NavLink>
+              </Button>
+            </Magnetic>
           </div>
         </div>
       </section>

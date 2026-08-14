@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react'
-import { motion } from 'motion/react'
+import { lazy, Suspense, type MouseEvent } from 'react'
+import { motion, useMotionValue, useMotionTemplate } from 'motion/react'
 import { NavLink } from 'react-router-dom'
 import { ArrowRight, GameController } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { StatTile } from '@/components/StatTile'
+import { Magnetic } from '@/components/Magnetic'
 
 const HeroScene = lazy(() => import('@/components/three/HeroScene').then((m) => ({ default: m.HeroScene })))
 const FloatingShard = lazy(() =>
@@ -11,10 +12,10 @@ const FloatingShard = lazy(() =>
 )
 
 const STATS = [
-  { value: '4', label: 'Amis fondateurs' },
-  { value: '32', label: 'Joueuses et joueurs en 2026' },
-  { value: '10', label: 'Jeux à la dernière édition' },
-  { value: '2', label: 'Éditions organisées' },
+  { value: 4, label: 'Amis fondateurs' },
+  { value: 32, label: 'Joueuses et joueurs en 2026' },
+  { value: 10, label: 'Jeux à la dernière édition' },
+  { value: 2, label: 'Éditions organisées' },
 ]
 
 const GALLERY = [
@@ -25,12 +26,36 @@ const GALLERY = [
 ]
 
 export function Home() {
+  const spotlightX = useMotionValue(-9999)
+  const spotlightY = useMotionValue(-9999)
+  const spotlight = useMotionTemplate`radial-gradient(480px circle at ${spotlightX}px ${spotlightY}px, rgba(172,131,248,0.16), transparent 70%)`
+
+  function handlePointerMove(e: MouseEvent<HTMLElement>) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    spotlightX.set(e.clientX - rect.left)
+    spotlightY.set(e.clientY - rect.top)
+  }
+
+  function handlePointerLeave() {
+    spotlightX.set(-9999)
+    spotlightY.set(-9999)
+  }
+
   return (
     <>
-      <section className="relative flex min-h-[100dvh] items-center overflow-hidden pt-16">
+      <section
+        onMouseMove={handlePointerMove}
+        onMouseLeave={handlePointerLeave}
+        className="relative flex min-h-[100dvh] items-center overflow-hidden pt-16"
+      >
         <Suspense fallback={null}>
           <HeroScene className="absolute inset-0 h-full w-full opacity-90" />
         </Suspense>
+        <motion.div
+          aria-hidden="true"
+          style={{ background: spotlight }}
+          className="pointer-events-none absolute inset-0"
+        />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/10 via-background/40 to-background" />
 
         <div className="relative mx-auto w-full max-w-7xl px-6 pt-8 md:px-10">
@@ -60,16 +85,20 @@ export function Home() {
               transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="mt-9 flex flex-wrap items-center gap-4"
             >
-              <Button asChild size="lg">
-                <NavLink to="/editions">
-                  Voir les éditions <ArrowRight size={18} weight="bold" />
-                </NavLink>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="https://www.instagram.com/glan_officiel/" target="_blank" rel="noreferrer">
-                  Suivre le G-LAN
-                </a>
-              </Button>
+              <Magnetic>
+                <Button asChild size="lg">
+                  <NavLink to="/editions">
+                    Voir les éditions <ArrowRight size={18} weight="bold" />
+                  </NavLink>
+                </Button>
+              </Magnetic>
+              <Magnetic>
+                <Button asChild variant="outline" size="lg">
+                  <a href="https://www.instagram.com/glan_officiel/" target="_blank" rel="noreferrer">
+                    Suivre le G-LAN
+                  </a>
+                </Button>
+              </Magnetic>
             </motion.div>
           </div>
         </div>
@@ -140,13 +169,15 @@ export function Home() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                 className={
-                  'overflow-hidden rounded-2xl border border-border' +
+                  'aspect-square overflow-hidden rounded-2xl border border-border' +
                   (i === 0 ? ' col-span-2 row-span-2' : '')
                 }
               >
                 <img
                   src={`https://picsum.photos/seed/${seed}/${i === 0 ? 800 : 400}/${i === 0 ? 800 : 400}`}
                   alt="Ambiance G-LAN"
+                  width={i === 0 ? 800 : 400}
+                  height={i === 0 ? 800 : 400}
                   className="h-full w-full object-cover grayscale transition-all duration-500 hover:grayscale-0"
                   loading="lazy"
                 />
@@ -178,11 +209,13 @@ export function Home() {
                 </p>
               </div>
             </div>
-            <Button asChild size="lg">
-              <a href="https://www.instagram.com/glan_officiel/" target="_blank" rel="noreferrer">
-                Suivre sur Instagram <ArrowRight size={18} weight="bold" />
-              </a>
-            </Button>
+            <Magnetic>
+              <Button asChild size="lg">
+                <a href="https://www.instagram.com/glan_officiel/" target="_blank" rel="noreferrer">
+                  Suivre sur Instagram <ArrowRight size={18} weight="bold" />
+                </a>
+              </Button>
+            </Magnetic>
           </motion.div>
         </div>
       </section>

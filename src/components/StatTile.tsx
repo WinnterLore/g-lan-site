@@ -1,11 +1,32 @@
-import { motion } from 'motion/react'
+import { useEffect, useRef } from 'react'
+import { motion, useMotionValue, useTransform, useReducedMotion, animate, useInView } from 'motion/react'
+
+function AnimatedNumber({ value }: { value: number }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.6 })
+  const reduce = useReducedMotion()
+  const count = useMotionValue(0)
+  const rounded = useTransform(count, (latest) => Math.round(latest).toString())
+
+  useEffect(() => {
+    if (!inView || reduce) return
+    const controls = animate(count, value, { duration: 1.1, ease: [0.16, 1, 0.3, 1] })
+    return () => controls.stop()
+  }, [inView, reduce, value, count])
+
+  return (
+    <span ref={ref}>
+      {reduce ? value : <motion.span>{rounded}</motion.span>}
+    </span>
+  )
+}
 
 export function StatTile({
   value,
   label,
   delay = 0,
 }: {
-  value: string
+  value: number
   label: string
   delay?: number
 }) {
@@ -14,10 +35,13 @@ export function StatTile({
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.5 }}
+      whileHover={{ y: -4 }}
       transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
-      className="glow-border rounded-2xl border border-border bg-surface/60 p-6"
+      className="glow-border rounded-2xl border border-border bg-surface/60 p-6 transition-shadow duration-300 hover:shadow-[0_0_40px_-12px_rgba(140,83,242,0.55)]"
     >
-      <div className="font-display text-4xl font-bold text-foreground md:text-5xl">{value}</div>
+      <div className="font-display text-4xl font-bold text-foreground md:text-5xl">
+        <AnimatedNumber value={value} />
+      </div>
       <div className="mt-2 font-body text-sm text-muted">{label}</div>
     </motion.div>
   )

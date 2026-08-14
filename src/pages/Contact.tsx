@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { motion } from 'motion/react'
 import { EnvelopeSimple, InstagramLogo, DiscordLogo, CheckCircle } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
+import { Magnetic } from '@/components/Magnetic'
 import { cn } from '@/lib/utils'
 
 const fieldClass =
@@ -100,9 +101,11 @@ export function Contact() {
             </div>
 
             <div className="mt-2 flex items-center gap-4">
-              <Button type="submit" size="lg" disabled={sent}>
-                {sent ? 'Message envoyé' : 'Envoyer le message'}
-              </Button>
+              <Magnetic>
+                <Button type="submit" size="lg" disabled={sent}>
+                  {sent ? 'Message envoyé' : 'Envoyer le message'}
+                </Button>
+              </Magnetic>
               {sent && (
                 <motion.span
                   initial={{ opacity: 0, x: -8 }}

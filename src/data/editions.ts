@@ -25,7 +25,7 @@ export const editions: Edition[] = [
       'Minecraft Speedrun',
       'Worms W.M.D',
       'Trials Rising',
-      'Retimes',
+      'Retimed',
     ],
     mysteryGame: true,
   },

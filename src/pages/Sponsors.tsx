@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { NavLink } from 'react-router-dom'
 import { ArrowRight, Megaphone, UsersFour, Heart } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
+import { Magnetic } from '@/components/Magnetic'
 import { sponsors } from '@/data/sponsors'
 
 const BENEFITS = [
@@ -94,11 +95,13 @@ export function Sponsors() {
                 partenariat à ce que tu peux apporter.
               </p>
               <div className="mt-8">
-                <Button asChild size="lg">
-                  <NavLink to="/contact">
-                    Nous contacter <ArrowRight size={18} weight="bold" />
-                  </NavLink>
-                </Button>
+                <Magnetic>
+                  <Button asChild size="lg">
+                    <NavLink to="/contact">
+                      Nous contacter <ArrowRight size={18} weight="bold" />
+                    </NavLink>
+                  </Button>
+                </Magnetic>
               </div>
             </motion.div>
 

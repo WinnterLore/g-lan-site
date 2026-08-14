@@ -34,7 +34,7 @@ export function Navbar() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:px-10">
-        <NavLink to="/" className="text-foreground">
+        <NavLink to="/" className="group text-foreground">
           <Logo />
         </NavLink>
 
